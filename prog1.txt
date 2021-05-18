@@ -1,0 +1,17 @@
+/*
+Isso e um comentariooo
+teste
+teste
+teste
+
+*/
+
+// dsoajdioasjdoiaiosda
+1 2 3 program var2
+else if var2 !@ 10 then
+   print var2 var1
+   print var1
+else 
+   100.5 + 10
+   
+   if
