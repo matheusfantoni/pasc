@@ -1,17 +1,17 @@
 /*
-Isso e um comentariooo
-teste
-teste
-teste
 
+comentariooo
+sadjoasjdok
+asdaksdasod
+dkadkoasd
+*******
 */
 
-// dsoajdioasjdoiaiosda
-1 2 3 program var2
-else if var2 !@ 10 then
-   print var2 var1
-   print var1
-else 
-   100.5 + 10
-   
-   if
+var1 = 10
+var2 = 20
+
+if var2 < var1 else 
+   print x
+
+
+/**/

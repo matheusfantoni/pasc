@@ -49,6 +49,4 @@ class Tag(Enum):
    SMB_CPA = 29
    SMB_COM = 30
    SMB_SEM = 31
-    
-   # lit
-   LIT = 70
+  
