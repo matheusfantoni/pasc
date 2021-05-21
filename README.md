@@ -12,8 +12,6 @@ Compilador da linguagem PasC em Python
 
 -> Resolver ASCII
 -> Resolver comentario EOF
--> Resolver Case-sensitive
+-> Resolver Case-sensitive - ok
 -> Implementar linha e coluna na TS
--> Remover os lexemas não encontrados TS (Está listando todos)
 -> Implementar a parte dos erros
--> Mostrar somente os tokens do programa fonte

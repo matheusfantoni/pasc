@@ -9,7 +9,7 @@ dkadkoasd
 
 var1 = 10
 var2 = 20
-
+IF
 if var2 < var1 else 
    print x
 

@@ -53,7 +53,7 @@ class Lexer():
 
         while(True):
             self.lookahead = self.input_file.read(1)
-            c = self.lookahead.decode('ascii')
+            c = self.lookahead.decode('ascii').lower()
 
             if(estado == 1):
 
