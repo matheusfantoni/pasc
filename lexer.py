@@ -6,14 +6,8 @@ from token import Token
 
 
 class Lexer():
-    '''
-    Classe que representa o Lexer (AFD):
 
-    [1] Voce devera se preocupar quando incremetar as linhas e colunas,
-    assim como, quando decrementar ou reinicia-las. Lembre-se, ambas 
-    comecam em 1.
-
-    '''
+    # Classe que representa o Lexer (AFD):
 
     def __init__(self, input_file):
         try:
@@ -84,6 +78,7 @@ class Lexer():
                     # Simula estado 15
                     return Token(Tag.OP_MUL, "*", self.n_line, self.n_column)
                 elif(c == '/'):
+                    # Simula estado 16
                     estado = 16
                 elif(c == '{'):
                     # Simula estado 22
@@ -115,9 +110,10 @@ class Lexer():
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + c + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
-                    estado = 1
-            elif(estado == 2):
+                    return None
 
+            elif(estado == 2):
+                # Simula estado 4
                 if(c == '='):
                     return Token(Tag.OP_EQ, "==", self.n_line, self.n_column)
                 else:
@@ -126,53 +122,62 @@ class Lexer():
                     return Token(Tag.OP_ATRIB, "=", self.n_line, self.n_column)
 
             elif(estado == 5):
+                # Simula estado 6
                 if(c == '='):
                     return Token(Tag.OP_NE, "!=", self.n_line, self.n_column)
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + c + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
-                    estado = 1
+                    return None
 
             elif(estado == 7):
+                # Simula estado 8
                 if(c == '='):
                     return Token(Tag.OP_LE, "<=", self.n_line, self.n_column)
 
-                # Simula estado 9
-                self.retornaPonteiro()
-                return Token(Tag.OP_LT, "<", self.n_line, self.n_column)
+                else:
+                    # Simula estado 9
+                    self.retornaPonteiro()
+                    return Token(Tag.OP_LT, "<", self.n_line, self.n_column)
+
             elif(estado == 10):
+                # Simula estado 11
                 if(c == '='):
                     return Token(Tag.OP_GE, ">=", self.n_line, self.n_column)
 
-                # Simula estado 12
-                self.retornaPonteiro()
-                return Token(Tag.OP_GT, ">", self.n_line, self.n_column)
+                else:
+                    # Simula estado 12
+                    self.retornaPonteiro()
+                    return Token(Tag.OP_GT, ">", self.n_line, self.n_column)
 
             elif(estado == 16):
+                # Simula estado 17
                 if(c == '/'):
                     estado = 17
 
+                # Simula estado 19
                 elif(c == '*'):
-                    estado = 19  # Implementar parte do comentário /**/
+                    estado = 19  
 
                 else:
+                    # Simula estado 18
                     self.retornaPonteiro()
                     return Token(Tag.OP_DIV, "/", self.n_line, self.n_column)
 
             elif(estado == 17):
 
                 if(c == '\n'):
-                    self.n_line += 1
-                    self.n_column = 1
                     estado = 1
-                    # Comentários começando por //
+                    #self.n_line += 1
+                    #self.n_column = 1   Faz parte da implementação linha e coluna
+                    
                 else:
                     estado = 17
 
             elif(estado == 19):
                 if(c == '*'):
                     estado = 20
-                    # Comentários começando por /*
+                   
                 else:
                     estado = 19
 
@@ -188,6 +193,7 @@ class Lexer():
                     lexema += c
 
                 elif(c == '.'):
+                    # Simula estado 30
                     lexema += c
                     estado = 30
 
@@ -198,6 +204,7 @@ class Lexer():
 
             elif(estado == 30):
                 if(c.isdigit()):
+                    # Simula estado 36
                     lexema += c
                     estado = 36
 
@@ -229,9 +236,9 @@ class Lexer():
                         token.setColuna(self.n_column)
 
                     else:
-                        token = Token(Tag.ID, lexema,
-                                      self.n_line, self.n_column)
+                        token = Token(Tag.ID, lexema, self.n_line, self.n_column)
                         self.ts.addToken(lexema, token)
+                    
                     return token
 
             elif (estado == 33):
@@ -239,7 +246,7 @@ class Lexer():
                 if(c.isascii()):
                     lexema += c
                     estado = 34
-                               
+                                          
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
@@ -254,11 +261,11 @@ class Lexer():
                 elif(c.isascii()):
                     lexema += c
                     estado = 34
-                
+
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
-                    
+
                     return None
             # fim if's de estados
         # fim while

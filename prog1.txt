@@ -6,11 +6,24 @@ asdaksdasod
 dkadkoasd
 *******
 */
-"@"
+//"@"
 "TTTTTTTTTtesteeeeeee"
 "!"
+,
+;
+{
+
+}
+(
+
+)
+
+111s
 var1 = 10
 var2 = 20
+10 / 5
+
+// ODJAOISDJAOIDJIOASJSDAOJ
 IF
 if var2 < var1 else 
    print x
