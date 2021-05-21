@@ -229,27 +229,36 @@ class Lexer():
                         token.setColuna(self.n_column)
 
                     else:
-                        token = Token(Tag.ID, lexema,self.n_line, self.n_column)
+                        token = Token(Tag.ID, lexema,
+                                      self.n_line, self.n_column)
                         self.ts.addToken(lexema, token)
                     return token
 
             elif (estado == 33):
-                
+
                 if(c.isascii()):
+                    lexema += c
                     estado = 34
-                    
+                               
+                else:
+                    self.sinalizaErroLexico("Caractere invalido [" + lexema + "] na linha " + str(
+                        self.n_line) + " e coluna " + str(self.n_column))
+
+                    return None
+
+            elif(estado == 34):
+                if(c == '"'):
+                    lexema += c
+                    return Token(Tag.CHAR_CONST, lexema, self.n_line, self.n_column)
+
+                elif(c.isascii()):
+                    lexema += c
+                    estado = 34
+                
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
                     
                     return None
-
-            elif(estado == 34):
-                if(c.isascii()):
-                    lexema += c
-                                
-                else:
-                    return Token(Tag.CHAR_CONST, lexema, self.n_line, self.n_column)
-                           
             # fim if's de estados
         # fim while
