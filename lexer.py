@@ -48,16 +48,16 @@ class Lexer():
         while(True):
             self.lookahead = self.input_file.read(1)
             c = self.lookahead.decode('ascii').lower()
-            
+
             if(estado == 1):
 
                 if(c == ''):
                     return Token(Tag.EOF, "EOF", self.n_line, self.n_column)
                 elif(c == ' ' or c == '\t' or c == '\n' or c == '\r'):
-                    
+
                     if(c == '\n'):
                         self.n_line += 1
-                                           
+
                     estado = 1
                 elif(c == '='):
                     estado = 2
@@ -175,23 +175,23 @@ class Lexer():
                     estado = 17
 
             elif(estado == 19):
-                
+
                 if(c == '*'):
                     estado = 20
-                                        
+
                 elif(c == '\n'):
                     self.n_line += 1
-                    
+
                 else:
                     estado = 19
-                             
+
             elif(estado == 20):
                 if(c == '/'):
                     estado = 1
-                
+
                 elif(c == '\n'):
                     self.n_line += 1
-                
+
                 elif(c == ''):
                     self.sinalizaErroLexico("Comentário não foi fechado antes de fim de arquivo na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
@@ -199,8 +199,7 @@ class Lexer():
 
                 else:
                     estado = 20
-                    
-                    
+
             elif(estado == 28):
                 if(c.isdigit()):
                     lexema += c
@@ -255,7 +254,7 @@ class Lexer():
 
                     return token
 
-            elif (estado == 33):
+            elif(estado == 33):
 
                 if(c.isascii()):
                     lexema += c
@@ -272,10 +271,22 @@ class Lexer():
                     lexema += c
                     return Token(Tag.CHAR_CONST, lexema, self.n_line, self.n_column)
 
-                elif(c.isascii()):
+                elif(c.isalnum()):
                     lexema += c
                     estado = 34
 
+                elif(c == '\n'):
+                    self.sinalizaErroLexico("String não fechada antes de quebra de linha [" + lexema + "] na linha " + str(
+                        self.n_line) + " e coluna " + str(self.n_column))
+
+                    return None
+                
+                elif(c == ''):
+                    self.sinalizaErroLexico("String não fechada antes do fim do arquivo [" + lexema + "] na linha " + str(
+                        self.n_line) + " e coluna " + str(self.n_column))
+
+                    return None
+                
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))

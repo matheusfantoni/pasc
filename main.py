@@ -15,5 +15,5 @@ if __name__ == "__main__":
    print("\n=> Tabela de Simbolos: \n")
    lexer.printTS()
    lexer.closeFile()
-    
+  
    print('\n=> ####### FIM DO PROGRAMA #########')
