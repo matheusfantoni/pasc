@@ -44,7 +44,7 @@ class Lexer():
         estado = 1
         lexema = ""
         c = '\u0000'
-        
+
         while(True):
             self.lookahead = self.input_file.read(1)
             self.n_column += 1
@@ -241,7 +241,7 @@ class Lexer():
             elif(estado == 31):
                 if(c.isalnum()):
                     lexema += c
-                    
+
                 else:
                     # Simula o estado 32
                     self.retornaPonteiro()
@@ -289,7 +289,7 @@ class Lexer():
                         self.n_line) + " e coluna " + str(self.n_column))
 
                     return None
-                
+
                 elif(c == '"'):
                     lexema += c
                     return Token(Tag.CHAR_CONST, lexema, self.n_line, self.n_column)
