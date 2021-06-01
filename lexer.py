@@ -48,16 +48,16 @@ class Lexer():
         while(True):
             self.lookahead = self.input_file.read(1)
             c = self.lookahead.decode('ascii').lower()
-
+            
             if(estado == 1):
 
                 if(c == ''):
                     return Token(Tag.EOF, "EOF", self.n_line, self.n_column)
                 elif(c == ' ' or c == '\t' or c == '\n' or c == '\r'):
-
+                    
                     if(c == '\n'):
                         self.n_line += 1
-
+                                           
                     estado = 1
                 elif(c == '='):
                     estado = 2
@@ -157,7 +157,7 @@ class Lexer():
 
                 # Simula estado 19
                 elif(c == '*'):
-                    estado = 19  
+                    estado = 19
 
                 else:
                     # Simula estado 18
@@ -168,26 +168,39 @@ class Lexer():
 
                 if(c == '\n'):
                     estado = 1
-                    #self.n_line += 1
-                    #self.n_column = 1   Faz parte da implementação linha e coluna
-                    
+                    self.n_line += 1
+                    # self.n_column = 1   Faz parte da implementação linha e coluna
+
                 else:
                     estado = 17
 
             elif(estado == 19):
+                
                 if(c == '*'):
                     estado = 20
-                   
+                                        
+                elif(c == '\n'):
+                    self.n_line += 1
+                    
                 else:
                     estado = 19
-
+                             
             elif(estado == 20):
                 if(c == '/'):
                     estado = 1
+                
+                elif(c == '\n'):
+                    self.n_line += 1
+                
+                elif(c == ''):
+                    self.sinalizaErroLexico("Comentário não foi fechado antes de fim de arquivo na linha " + str(
+                        self.n_line) + " e coluna " + str(self.n_column))
+                    return None
 
                 else:
                     estado = 20
-
+                    
+                    
             elif(estado == 28):
                 if(c.isdigit()):
                     lexema += c
@@ -236,9 +249,10 @@ class Lexer():
                         token.setColuna(self.n_column)
 
                     else:
-                        token = Token(Tag.ID, lexema, self.n_line, self.n_column)
+                        token = Token(Tag.ID, lexema,
+                                      self.n_line, self.n_column)
                         self.ts.addToken(lexema, token)
-                    
+
                     return token
 
             elif (estado == 33):
@@ -246,7 +260,7 @@ class Lexer():
                 if(c.isascii()):
                     lexema += c
                     estado = 34
-                                          
+
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))

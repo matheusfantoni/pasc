@@ -1,12 +1,5 @@
-/*
-
-comentariooo
-sadjoasjdok
-asdaksdasod
-dkadkoasd
-*******
-*/
 //"@"
+// sdjalkjd
 "TTTTTTTTTtesteeeeeee"
 "!"
 ,
@@ -28,5 +21,23 @@ IF
 if var2 < var1 else 
    print x
 
+/* 
+comentariooosadjoasjdokasdaksdasoddkadkoasd******* 
+*/
 
-/**/
+if
+else
+//sadasd
+and
+/s/
+
+/* *IFelse */
+
+and 
+
+asdasdasd
+
+
+
+
+var9
