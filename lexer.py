@@ -45,6 +45,7 @@ class Lexer():
         lexema = ""
         c = '\u0000'
         quebradeLinha = '\u000A'
+        aspas = '\u0022'
 
         while(True):
             self.lookahead = self.input_file.read(1)
@@ -60,7 +61,7 @@ class Lexer():
                     if(c == '\n'):
                         self.n_line += 1
                         self.n_column = 1
-                        
+
                     estado = 1
                 elif(c == '='):
                     estado = 2
@@ -261,7 +262,13 @@ class Lexer():
 
             elif(estado == 33):
 
-                if(c.isascii()):
+                if(c == '"'):
+                    self.sinalizaErroLexico("String vazia [" + lexema + "] na linha " + str(
+                        self.n_line) + " e coluna " + str(self.n_column))
+
+                    return None
+
+                elif(c.isascii()):
                     lexema += c
                     estado = 34
 
