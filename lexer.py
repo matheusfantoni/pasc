@@ -44,6 +44,7 @@ class Lexer():
         estado = 1
         lexema = ""
         c = '\u0000'
+        quebradeLinha = '\u000A'
 
         while(True):
             self.lookahead = self.input_file.read(1)
@@ -271,11 +272,11 @@ class Lexer():
                     lexema += c
                     return Token(Tag.CHAR_CONST, lexema, self.n_line, self.n_column)
 
-                elif(c.isalnum()):
+                elif(c.isascii()):
                     lexema += c
                     estado = 34
 
-                elif(c == '\n'):
+                elif(c == quebradeLinha):
                     self.sinalizaErroLexico("String não fechada antes de quebra de linha [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
 
