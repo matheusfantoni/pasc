@@ -44,9 +44,7 @@ class Lexer():
         estado = 1
         lexema = ""
         c = '\u0000'
-        quebradeLinha = '\u000A'
-        aspas = '\u0022'
-
+        
         while(True):
             self.lookahead = self.input_file.read(1)
             self.n_column += 1
@@ -243,7 +241,7 @@ class Lexer():
             elif(estado == 31):
                 if(c.isalnum()):
                     lexema += c
-
+                    
                 else:
                     # Simula o estado 32
                     self.retornaPonteiro()
@@ -279,15 +277,8 @@ class Lexer():
                     return None
 
             elif(estado == 34):
-                if(c == '"'):
-                    lexema += c
-                    return Token(Tag.CHAR_CONST, lexema, self.n_line, self.n_column)
 
-                elif(c.isascii()):
-                    lexema += c
-                    estado = 34
-
-                elif(c == quebradeLinha):
+                if(c == '\n'):
                     self.sinalizaErroLexico("String não fechada antes de quebra de linha [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
 
@@ -298,6 +289,14 @@ class Lexer():
                         self.n_line) + " e coluna " + str(self.n_column))
 
                     return None
+                
+                elif(c == '"'):
+                    lexema += c
+                    return Token(Tag.CHAR_CONST, lexema, self.n_line, self.n_column)
+
+                elif(c.isascii()):
+                    lexema += c
+                    estado = 34
 
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + lexema + "] na linha " + str(
