@@ -48,6 +48,7 @@ class Lexer():
 
         while(True):
             self.lookahead = self.input_file.read(1)
+            self.n_column += 1
             c = self.lookahead.decode('ascii').lower()
 
             if(estado == 1):
@@ -58,7 +59,8 @@ class Lexer():
 
                     if(c == '\n'):
                         self.n_line += 1
-
+                        self.n_column = 1
+                        
                     estado = 1
                 elif(c == '='):
                     estado = 2
@@ -170,7 +172,7 @@ class Lexer():
                 if(c == '\n'):
                     estado = 1
                     self.n_line += 1
-                    # self.n_column = 1   Faz parte da implementação linha e coluna
+                    self.n_column = 1
 
                 else:
                     estado = 17
@@ -182,6 +184,7 @@ class Lexer():
 
                 elif(c == '\n'):
                     self.n_line += 1
+                    self.n_column = 1
 
                 else:
                     estado = 19
@@ -192,6 +195,7 @@ class Lexer():
 
                 elif(c == '\n'):
                     self.n_line += 1
+                    self.n_column = 1
 
                 elif(c == ''):
                     self.sinalizaErroLexico("Comentário não foi fechado antes de fim de arquivo na linha " + str(
@@ -281,13 +285,13 @@ class Lexer():
                         self.n_line) + " e coluna " + str(self.n_column))
 
                     return None
-                
+
                 elif(c == ''):
                     self.sinalizaErroLexico("String não fechada antes do fim do arquivo [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
 
                     return None
-                
+
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))

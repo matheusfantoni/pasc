@@ -1,17 +1,15 @@
-//"@"
-// sdjalkjd
-"TTTTTTTTTtesteeeeeee"
+   op
+vaeeeer55555 
 "!"
 ,
 ;
 {
 
 }
-(
 
-)
-
-111s
+11111111    5555
+111
+s
 var1 = 10
 var2 = 20
 10 / 5
