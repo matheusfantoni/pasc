@@ -127,6 +127,7 @@ class Lexer():
                 # Simula estado 6
                 if(c == '='):
                     return Token(Tag.OP_NE, "!=", self.n_line, self.n_column)
+
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + c + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
@@ -197,7 +198,7 @@ class Lexer():
                     self.n_column = 1
 
                 elif(c == ''):
-                    self.sinalizaErroLexico("Comentário não foi fechado antes de fim de arquivo na linha " + str(
+                    self.sinalizaErroLexico("Comentário não foi fechado na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
                     return None
 

@@ -43,3 +43,10 @@ teste4
 "sss"
 
 "variavel"
+
+/* jffff */
+
+id2
+aa22
+
+10*
