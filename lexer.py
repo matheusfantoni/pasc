@@ -33,6 +33,7 @@ class Lexer():
     def retornaPonteiro(self):
         if(self.lookahead.decode('ascii') != ''):
             self.input_file.seek(self.input_file.tell()-1)
+            self.n_column -= 1
 
     def printTS(self):
         self.ts.printTS()
@@ -49,9 +50,9 @@ class Lexer():
             self.lookahead = self.input_file.read(1)
             self.n_column += 1
             c = self.lookahead.decode('ascii')
-
+            
             if(estado == 1):
-
+                
                 if(c == ''):
                     return Token(Tag.EOF, "EOF", self.n_line, self.n_column)
                 elif(c == ' ' or c == '\t' or c == '\n' or c == '\r'):
@@ -59,7 +60,7 @@ class Lexer():
                     if(c == '\n'):
                         self.n_line += 1
                         self.n_column = 1
-
+                  
                     estado = 1
                 elif(c == '='):
                     estado = 2

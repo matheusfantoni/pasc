@@ -4,7 +4,6 @@ Compilador da linguagem PasC em Python
 Integrante: Matheus de Carvalho Fantoni
 RA: 118120005
 
--> Corrigir erro coluna
 -> Implementar modo pânico
 
 

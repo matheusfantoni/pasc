@@ -1,14 +1,10 @@
-   op
-vaeeeer55555 
 "!"
 ,
 ;
-{
-
-}
-
+{}
 11111111    5555
 111
+}
 s
 var1 = 10
 var2 = 20
@@ -52,4 +48,4 @@ aa22
 "stringTeste"
 ELSE
 aA55
-AND
+AND 
