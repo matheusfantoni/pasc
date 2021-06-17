@@ -14,7 +14,7 @@ class TS:
       
       self.ts['program'] = Token(Tag.KW_PROGRAM, 'program', 0, 0)
       self.ts['if'] = Token(Tag.KW_IF, 'if', 0, 0)
-      self.ts['else'] = Token(Tag.KW_ELSE, 'else', 0, 0)
+      self.ts['else'] = Token(Tag.KW_ELSE, 'else', 0, 0,)
       self.ts['while'] = Token(Tag.KW_WHILE, 'while', 0, 0)
       self.ts['write'] = Token(Tag.KW_WRITE, 'write', 0, 0)
       self.ts['read'] = Token(Tag.KW_READ, 'read', 0, 0)
@@ -26,7 +26,7 @@ class TS:
       
 
    def getToken(self, lexema):
-      token = self.ts.get(lexema)
+      token = self.ts.get(lexema.lower())
       return token
 
    def addToken(self, lexema, token):

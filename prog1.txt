@@ -48,6 +48,8 @@ teste4
 
 id2
 aa22
-
-10*
-/* 
+"VARIAVEL"
+"stringTeste"
+ELSE
+aA55
+AND
