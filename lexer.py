@@ -179,7 +179,12 @@ class Lexer():
 
             elif(estado == 19):
 
-                if(c == '*'):
+                if(c == ''):
+                    self.sinalizaErroLexico("Comentário não foi fechado antes de EOF na linha " + str(
+                        self.n_line) + " e coluna " + str(self.n_column))
+                    return None
+                    
+                elif(c == '*'):
                     estado = 20
 
                 elif(c == '\n'):
