@@ -259,10 +259,8 @@ class Lexer():
                         token.setColuna(self.n_column)
 
                     else:
-                        token = Token(Tag.ID, lexema,
-                                      self.n_line, self.n_column)
+                        token = Token(Tag.ID, lexema, self.n_line, self.n_column)
                         self.ts.addToken(lexema, token)
-
                     return token
 
             elif(estado == 33):
@@ -280,7 +278,6 @@ class Lexer():
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
-
                     return None
 
             elif(estado == 34):
@@ -288,13 +285,11 @@ class Lexer():
                 if(c == '\n'):
                     self.sinalizaErroLexico("String não fechada antes de quebra de linha [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
-
                     return None
 
                 elif(c == ''):
                     self.sinalizaErroLexico("String não fechada antes do fim do arquivo [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
-
                     return None
 
                 elif(c == '"'):
@@ -308,7 +303,6 @@ class Lexer():
                 else:
                     self.sinalizaErroLexico("Caractere invalido [" + lexema + "] na linha " + str(
                         self.n_line) + " e coluna " + str(self.n_column))
-
                     return None
             # fim if's de estados
         # fim while
