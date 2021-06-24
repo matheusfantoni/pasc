@@ -7,7 +7,7 @@ from token import Token
 
 class Lexer():
 
-    # Classe que representa o Lexer (AFD):
+    # Classe que representa o Lexer (AFD) - Analisador Léxico:
 
     def __init__(self, input_file):
         try:
@@ -37,7 +37,7 @@ class Lexer():
 
     def printTS(self):
         self.ts.printTS()
-
+        
     def proxToken(self):
 
         # Implementando um AFD.
