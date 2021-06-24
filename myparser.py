@@ -47,14 +47,14 @@ class Parser():
    LEMBRETE:
    Todas as decisoes do Parser, sao guiadas pela Tabela Preditiva (TP)
    """
-
+   '''
    # Programa -> CMD EOF
    def prog(self):
       self.Cmd()
       if(self.token.getNome() != Tag.EOF):
          self.sinalizaErroSintatico("Esperado \"EOF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
          sys.exit(0)
-
+   '''
    # prog → “program” “id” body
    def prog(self):
           self.eat(Tag.KW_PROGRAM)
