@@ -55,4 +55,27 @@ class Parser():
          self.sinalizaErroSintatico("Esperado \"EOF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
          sys.exit(0)
 
+   # prog → “program” “id” body
+   def prog(self):
+          self.eat(Tag.KW_PROGRAM)
+          self.eat(Tag.ID)
+          self.body()
+          if(self.token.getNome() != Tag.EOF):
+                 self.sinalizaErroSintatico("Esperado \"EOF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+                 sys.exit(0)
+          
+   # body → decl-list “{“ stmt-list “}”
+   def body(self):
+          self.decl_list()
+          self.eat(Tag.SMB_OBC)
+          self.stmt_list()
+          self.eat(Tag.SMB_CBC)
+   
+   # decl-list → decl “;” decl-list  | ε 
+   def decl_list(self):
+          self.decl()
+          self.eat(Tag.SMB_SEM)
+          self.decl_list()        
+          
+          
   
