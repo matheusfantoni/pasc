@@ -57,25 +57,50 @@ class Parser():
    '''
    # prog → “program” “id” body
    def prog(self):
-          self.eat(Tag.KW_PROGRAM)
-          self.eat(Tag.ID)
-          self.body()
-          if(self.token.getNome() != Tag.EOF):
-                 self.sinalizaErroSintatico("Esperado \"EOF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
-                 sys.exit(0)
+      self.eat(Tag.KW_PROGRAM)
+      self.eat(Tag.ID)
+      self.body()
+      if(self.token.getNome() != Tag.EOF):
+            self.sinalizaErroSintatico("Esperado \"EOF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
           
    # body → decl-list “{“ stmt-list “}”
    def body(self):
-          self.decl_list()
-          self.eat(Tag.SMB_OBC)
-          self.stmt_list()
-          self.eat(Tag.SMB_CBC)
+      self.decl_list()
+      self.eat(Tag.SMB_OBC)
+      #self.stmt_list()
+      self.eat(Tag.SMB_CBC)
    
-   # decl-list → decl “;” decl-list  | ε 
+   # decl_list → decl “;” decl_list  | ε    
    def decl_list(self):
-          self.decl()
-          self.eat(Tag.SMB_SEM)
-          self.decl_list()        
-          
+      if (self.eat(Tag.NUM_CONST) or self.eat(Tag.CHAR_CONST)):
+         self.eat(Tag.SMB_SEM)
+         self.decl_list()
+
+   # decl → type id-list
+   def decl(self):
+      self.type()
+      self.id_list()
+
+   # type → “num” | “char”
+   def type(self):
+      if (self.token.getNome() == Tag.NUM_CONST):
+         self.eat(Tag.NUM_CONST)
+      elif (self.token.getNome() == Tag.CHAR_CONST):
+         self.eat(Tag.CHAR_CONST)
+      else:
+         self.sinalizaErroSintatico("Esperado \"num\" ou \"char\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+         sys.exit(0)
+
+   # id_list → “id” id_list_linha
+   def id_list(self):
+      self.eat(Tag.ID)
+      self.id_list_linha()
+
+   # id_list_linha → “,” id_list | ε
+   def id_list_linha(self):
+      if (self.token.getNome() == Tag.SMB_COM):
+         self.eat(Tag.SMB_COM)
+         self.id_list()
           
   
