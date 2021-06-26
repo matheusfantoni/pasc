@@ -1,3 +1,1 @@
-program id2 {
-   
-}
+program var 27{}
