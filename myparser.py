@@ -103,4 +103,68 @@ class Parser():
          self.eat(Tag.SMB_COM)
          self.id_list()
           
-  
+   # expression → simple_expr expression_linha
+   def expression(self):
+      self.simple_expr()
+      self.expression_linha()
+
+   #expression_linha → logop simple_expr expression_linha | ε
+   def expression_linha(self):
+      if (self.eat(Tag.KW_AND) or self.eat(Tag.KW_OR)):
+         self.simple_expr()
+         self.expression_linha()
+
+   #simple_expr → term simple_exp_linha
+   def simple_expr(self):
+      self.term()
+      self.simple_exp_linha()
+
+   # simple_exp_linha → relop term simple_exp_linha | ε
+   def simple_exp_linha(self):
+      if(self.eat(Tag.OP_EQ) or self.eat(Tag.OP_GT) or self.eat(Tag.OP_GE) or 
+         self.eat(Tag.OP_LT) or self.eat(Tag.OP_LE) or self.eat(Tag.OP_NE)):
+            self.term()
+            self.simple_exp_linha()
+
+   # term → factor_b term_linha
+   def term(self):
+      self.factor_b()
+      self.term_linha()
+
+   # term_linha → addop factor_b term_linha | ε
+   def term_linha(self):
+      if (self.eat(Tag.OP_AD) or self.eat(Tag.OP_MIN)):
+         self.factor_b()
+         self.term_linha()
+
+   # factor_b → factor_a factor_b_linha
+   def factor_b(self):
+      self.factor_a()
+      self.factor_b_linha()
+
+   # factor_b_linha → mulop factor_a factor_b_linha | ε
+   def factor_b_linha(self):
+      if (self.eat(Tag.OP_MUL) or self.eat(Tag.OP_DIV)):
+         self.factor_a()
+         self.factor_b_linha()
+
+   # factor_a → factor | not factor
+   def factor_a(self):
+      if (self.eat(Tag.KW_NOT)):
+         self.factor()
+      else:
+         self.factor()
+   
+   # factor → “id” | constant | “(“ expression “)”
+   def factor(self):
+      if (self.token.getNome() == Tag.ID):
+         self.eat(Tag.ID)
+      elif (self.token.getNome() == Tag.NUM_CONST):
+         self.eat(Tag.NUM_CONST)
+      elif (self.token.getNome() == Tag.CHAR_CONST):
+         self.eat(Tag.CHAR_CONST)
+      elif (self.token.getNome() == Tag.SMB_OPA):
+         self.eat(Tag.SMB_OPA)
+      else:
+         self.sinalizaErroSintatico("Esperado \"id\", \"num_const\", \"char_const\" ou \"(\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+         sys.exit(0)
