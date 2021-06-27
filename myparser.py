@@ -49,9 +49,9 @@ class Parser:
             return None
 
         self.body()
-        # if(self.token.getNome() != Tag.EOF):
-        #   self.sinalizaErroSintatico("Esperado \"EOF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
-        #    sys.exit(0)
+        if(self.token.getNome() != Tag.EOF):
+          self.sinalizaErroSintatico("Esperado \"EOF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+          sys.exit(0)
 
     # body → decl-list “{“ stmt-list “}”
     def body(self):
@@ -69,11 +69,13 @@ class Parser:
 
     # decl-list → decl “;” decl-list  | ε
     def decl_list(self):
-        if self.eat(Tag.NUM_CONST) or self.eat(Tag.CHAR_CONST):
-            if not self.eat(Tag.SMB_SEM):
+        if self.token.getNome() == Tag.NUM_CONST or self.token.getNome() == Tag.CHAR_CONST:
+            self.decl()
+            if self.eat(Tag.SMB_SEM):
+               self.decl_list()
+            else:
                 self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
                 return None
-            self.decl_list()
         else:
             return
 
@@ -112,13 +114,47 @@ class Parser:
 
     # stmt-list → stmt “;” stmt-list  | ε
     def stmt_list(self):
-        if self.eat(Tag.ID) or self.eat(Tag.KW_IF) or self.eat(Tag.KW_WHILE) or self.eat(Tag.KW_WRITE):
-            self.eat(Tag.SMB_SEM)
-            self.stmt_list()
+        if self.token.getNome() == Tag.ID:
+            self.assign_stmt()
+            if self.eat(Tag.SMB_SEM):
+               self.stmt_list()
+            else:
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                return None
+        elif self.token.getNome() == Tag.KW_IF:
+            self.if_stmt()
+            if self.eat(Tag.SMB_SEM):
+               self.stmt_list()
+            else:
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                return None
+        elif self.token.getNome() == Tag.KW_WHILE:
+            self.while_stmt()
+            if self.eat(Tag.SMB_SEM):
+               self.stmt_list()
+            else:
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                return None
+        elif self.token.getNome() == Tag.KW_READ:
+            self.read_stmt()
+            if self.eat(Tag.SMB_SEM):
+               self.stmt_list()
+            else:
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                return None
+        elif self.token.getNome() == Tag.KW_WRITE:
+            self.write_stmt()
+            if self.eat(Tag.SMB_SEM):
+               self.stmt_list()
+            else:
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                return None
+        else:
+            return
 
     # stmt → assign-stmt | if-stmt | while-stmt | read-stmt | write-stmt
     def stmt(self):
-        if self.eat(Tag.ID) or self.eat(Tag.KW_IF) or self.eat(Tag.KW_WHILE) or self.eat(Tag.KW_WRITE):
+        if self.eat(Tag.ID) or self.eat(Tag.KW_IF) or self.eat(Tag.KW_WHILE) or self.eat(Tag.KW_READ) or self.eat(Tag.KW_WRITE):
             self.advance()
 
         else:
@@ -126,14 +162,14 @@ class Parser:
                 "Esperado \"ID, IF, WHILE ou WRITE\"; encontrado " + "\"" + self.token.getLexema() + "\"")
             return None
 
-    # assign-stmt → “id” “=” simple_expr
+   #  # assign-stmt → “id” “=” simple_expr
     def assign_stmt(self):
         if self.eat(Tag.ID):
             if not self.eat(Tag.OP_ATRIB):
                 self.sinalizaErroSintatico("Esperado \"=\", encontrado " + "\"" + self.token.getLexema() + "\"")
-
-            self.simple_expr()
-
+            else:
+                self.simple_expr()
+                return
         else:
             self.sinalizaErroSintatico("Esperado \"ID\"; encontrado " + "\"" + self.token.getLexema() + "\"")
             return None
@@ -227,7 +263,7 @@ class Parser:
     def write_stmt(self):
         if self.eat(Tag.KW_WRITE):
             self.simple_expr()
-
+            return
         else:
             self.sinalizaErroSintatico("Esperado \"WRITE\", encontrado " + "\"" + self.token.getLexema() + "\"")
             return None
