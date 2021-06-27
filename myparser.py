@@ -119,9 +119,9 @@ class Parser():
    
    # stmt-list → stmt “;” stmt-list  | ε
    def stmt_list(self):
-          if(self.eat(Tag.ID) or self.eat(Tag.KW_IF) or self.eat(Tag.KW_WHILE) or self.eat(Tag.KW_WRITE)):
-                 self.eat(Tag.SMB_SEM)
-                 self.stmt_list()
+         if(self.eat(Tag.ID) or self.eat(Tag.KW_IF) or self.eat(Tag.KW_WHILE) or self.eat(Tag.KW_WRITE)):
+            self.eat(Tag.SMB_SEM)
+            self.stmt_list()
    
    # stmt → assign-stmt | if-stmt | while-stmt | read-stmt | write-stmt 
    def stmt(self):
