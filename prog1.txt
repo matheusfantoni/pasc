@@ -1,5 +1,1 @@
-program meuPrograma "meuChar" meuId1, meuId2 ; {
-    while(10 * meuId3 / ( 30 + meuId4 - 5 ) == 50 ) {
-
-    };
-}
+program id
