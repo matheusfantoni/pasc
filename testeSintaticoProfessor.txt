@@ -1,0 +1,33 @@
+/*
+Programa Teste
+*/
+
+// Este programa foi usado como teste
+
+program P1
+   num x, y, z;
+   char k;
+{
+   write "Teste para o Lexer";
+
+   read z;
+
+   while(not(z != 0)) {
+      write "Z = 0";
+      z = z + 1;
+   };
+
+   y = Z;
+   x = 10.123 * y;
+   k = "g";
+
+   if(y * 10 <= 100 and x / y >= 10) {
+      write "C#n4a.m@luca qu& d1z SIM!";
+   }
+   else {
+      if(x + y != 10 or x - y == 10) {
+         write "OK";
+      }
+      else {
+         write k;
+      }; /** outro comentario **

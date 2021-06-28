@@ -4,7 +4,7 @@ from lexer import Lexer
 from myparser import Parser
 
 if __name__ == "__main__":
-   lexer = Lexer('prog1.txt')
+   lexer = Lexer('testeSintaticoProfessor.txt')
    parser = Parser(lexer)
    print('\n=> ####### INICIANDO PARSER #########')
    print("\n=> ANALISE SINTÁTICA: \n")

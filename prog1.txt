@@ -1,1 +1,11 @@
-program id
+if 10 != 10 then {
+	var = 10
+}
+else { 
+	if 10 == var then {
+		print var
+	}
+	else { 
+		print 10.1
+	}
+}
