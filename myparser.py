@@ -56,7 +56,6 @@ class Parser:
     # body → decl-list “{“ stmt-list “}”
     def body(self):
         self.decl_list()
-
         if not self.eat(Tag.SMB_OBC):
             self.sinalizaErroSintatico("Esperado \"{\", encontrado " + "\"" + self.token.getLexema() + "\"")
             return None
@@ -69,7 +68,7 @@ class Parser:
 
     # decl-list → decl “;” decl-list  | ε
     def decl_list(self):
-        if self.token.getNome() == Tag.NUM_CONST or self.token.getNome() == Tag.CHAR_CONST:
+        if self.token.getNome() == Tag.KW_NUM or self.token.getNome() == Tag.KW_CHAR:
             self.decl()
             if self.eat(Tag.SMB_SEM):
                 self.decl_list()
@@ -86,10 +85,10 @@ class Parser:
 
     # type → “num” | “char”
     def type(self):
-        if self.token.getNome() == Tag.NUM_CONST:
-            self.eat(Tag.NUM_CONST)
-        elif self.token.getNome() == Tag.CHAR_CONST:
-            self.eat(Tag.CHAR_CONST)
+        if self.token.getNome() == Tag.KW_NUM:
+            self.eat(Tag.KW_NUM)
+        elif self.token.getNome() == Tag.KW_CHAR:
+            self.eat(Tag.KW_CHAR)
         else:
             self.sinalizaErroSintatico(
                 "Esperado \"NUM\" ou \"CHAR\"; encontrado " + "\"" + self.token.getLexema() + "\"")
@@ -160,7 +159,7 @@ class Parser:
 
         else:
             self.sinalizaErroSintatico(
-                "Esperado \"ID, IF, WHILE ou WRITE\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+                "Esperado \"ID, IF, WHILE, READ ou WRITE\"; encontrado " + "\"" + self.token.getLexema() + "\"")
             return None
 
     #  # assign-stmt → “id” “=” simple_expr
