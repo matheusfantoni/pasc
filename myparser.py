@@ -1,6 +1,7 @@
 import sys
 
 from tag import Tag
+from no import No
 
 
 # Classe que representa o Parser (Analisador Sintático)
@@ -36,7 +37,7 @@ class Parser:
         else:
             return False
 
-    #      1° Bloco - Regras
+    # 1° Bloco - Regras
 
     # prog → “program” “id” body
     def prog(self):

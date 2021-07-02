@@ -50,3 +50,8 @@ class Tag(Enum):
    SMB_COM = 30
    SMB_SEM = 31
   
+ # Constantes para tipos
+   TIPO_VAZIO   = 1000
+   TIPO_LOGICO  = 1001
+   TIPO_NUMERO  = 1002
+   TIPO_ERRO    = 1004
