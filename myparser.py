@@ -206,6 +206,7 @@ class Parser:
                 noSimple_expr = self.simple_expr()
                 if noSimple_expr.tipo != tempToken.getTipo():
                     self.sinalizaErroSemantico("Atribuição incompatível")
+                    sys.exit(0)
                 return
         else:
             self.sinalizaErroSintatico("Esperado \"ID\"; encontrado " + "\"" + self.token.getLexema() + "\"")
@@ -303,11 +304,10 @@ class Parser:
 
     # read-stmt → “read” “id”
     def read_stmt(self):
-        
-        # armazena token corrente, uma vez que o ID pode ser consumido
-        tempToken = copy.copy(self.token)
-
         if self.eat(Tag.KW_READ):
+            # armazena token corrente, uma vez que o ID pode ser consumido
+            tempToken = copy.copy(self.token)
+
             if not self.eat(Tag.ID):
                 self.sinalizaErroSintatico("Esperado \"ID\", encontrado " + "\"" + self.token.getLexema() + "\"")
                 sys.exit(0)
@@ -343,13 +343,11 @@ class Parser:
         noSimple_expr = self.simple_expr()
         noExpression_linha = self.expression_linha()
         if noExpression_linha.tipo == Tag.TIPO_VAZIO:
-            noExpression.tipo = noSimple_expr.tipo 
-
+            noExpression.tipo = noSimple_expr.tipo
         elif noExpression_linha.tipo == noSimple_expr.tipo and noSimple_expr.tipo == Tag.TIPO_LOGICO:
             noExpression.tipo = Tag.TIPO_LOGICO
         else:
             noExpression.tipo = Tag.TIPO_ERRO
-
         return noExpression    
 
     #expression’ → logop simple-expr expression’
@@ -399,12 +397,11 @@ class Parser:
             if noSimple_exp_linha_filho.tipo == Tag.TIPO_VAZIO and noTerm.tipo == Tag.TIPO_NUMERO:
                 noSimple_exp_linha.tipo = Tag.TIPO_NUMERO
             
-            elif noSimple_exp_linha_filho.tipo == noTerm.tipo == Tag.TIPO_NUMERO:
+            elif noSimple_exp_linha_filho.tipo == noTerm.tipo and noTerm.tipo == Tag.TIPO_NUMERO:
                 noSimple_exp_linha.tipo = Tag.TIPO_NUMERO
             
             else:
                 noSimple_exp_linha.tipo = Tag.TIPO_ERRO
-
             return noSimple_exp_linha
         
         noSimple_exp_linha.tipo = Tag.TIPO_VAZIO
@@ -461,7 +458,7 @@ class Parser:
             noFactor_b.tipo = Tag.TIPO_NUMERO
         else:
             noFactor_b.tipo = Tag.TIPO_NUMERO
-        
+
         return noFactor_b
 
     # factor_b_linha → mulop factor_a factor_b_linha | ε
