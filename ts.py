@@ -32,6 +32,9 @@ class TS:
    def addToken(self, lexema, token):
       self.ts[lexema] = token
 
+   def removeToken(self, lexema):
+      self.ts.pop(lexema)
+
    def printTS(self):
       for k, t in (self.ts.items()):
          print(k, ":", t.toString())

@@ -1,5 +1,10 @@
 # pasc
 Compilador da linguagem PasC em Python
 
-Integrante: Matheus de Carvalho Fantoni
+Integrantes: 
+
+Matheus de Carvalho Fantoni
 RA: 118120005
+
+Breno Brandão Gonçalves
+RA: 11825266

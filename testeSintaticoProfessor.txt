@@ -30,4 +30,6 @@ program P1
       }
       else {
          write k;
-      }; /** outro comentario **
+      }; /** outro comentario **/
+   };
+}
