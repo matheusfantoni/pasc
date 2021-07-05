@@ -457,8 +457,8 @@ class Parser:
         elif noFactor_b_linha.tipo == noFactor_a.tipo and noFactor_b_linha.tipo == Tag.TIPO_NUMERO:
             noFactor_b.tipo = Tag.TIPO_NUMERO
         else:
-            noFactor_b.tipo = Tag.TIPO_NUMERO
-
+            noFactor_b.tipo = Tag.TIPO_ERRO
+        
         return noFactor_b
 
     # factor_b_linha → mulop factor_a factor_b_linha | ε
@@ -474,7 +474,6 @@ class Parser:
                 noFactor_b_linha.tipo = Tag.TIPO_NUMERO
             else:
                 noFactor_b_linha.tipo = Tag.TIPO_ERRO
-
             return noFactor_b_linha
         
         noFactor_b_linha.tipo = Tag.TIPO_VAZIO
