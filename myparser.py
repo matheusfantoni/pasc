@@ -12,7 +12,6 @@ class Parser:
     def __init__(self, lexer):
         self.lexer = lexer
         self.token = lexer.proxToken()  # Leitura inicial obrigatoria do primeiro simbolo
-        self.erros = 0
         if self.token is None:  # erro no Lexer
             sys.exit(0)
 
@@ -33,11 +32,7 @@ class Parser:
 
     def skip(self, message):
         self.sinalizaErroSintatico(message)
-        self.erros += 1
-        print('ALGUMA COISA ----> ', self.erros)
-        if self.erros == 5:
-            print("[LIMITE DE ERROS SINTÁTICOS EXCEDIDOS]")
-            sys.exit(0)
+        self.advance()
 
     # verifica token esperado t
     def eat(self, t):
@@ -56,29 +51,34 @@ class Parser:
         tempToken = copy.copy(self.token)
 
         if not self.eat(Tag.KW_PROGRAM):
-            self.skip("Esperado \"PROGRAM\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"PROGRAM\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
         if not self.eat(Tag.ID):
-            self.skip("Esperado \"ID\", encontrado " + "\"" + self.token.getLexema() + "\"")
-        else:
-            self.lexer.ts.removeToken(tempToken.getLexema())
-            tempToken.setTipo(Tag.TIPO_VAZIO)
-            self.lexer.ts.addToken(tempToken.getLexema(), tempToken)
+            self.sinalizaErroSintatico("Esperado \"ID\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
+
+        self.lexer.ts.removeToken(tempToken.getLexema())
+        tempToken.setTipo(Tag.TIPO_VAZIO)
+        self.lexer.ts.addToken(tempToken.getLexema(), tempToken)
         
         self.body()
         if self.token.getNome() != Tag.EOF:
-            self.skip("Esperado \"EOF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"EOF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
     # body → decl-list “{“ stmt-list “}”
     def body(self):
         self.decl_list()
         if not self.eat(Tag.SMB_OBC):
-            self.skip("Esperado \"{\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"{\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
         self.stmt_list()
 
         if not self.eat(Tag.SMB_CBC):
-            self.skip("Esperado \"}\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"}\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
     # decl-list → decl “;” decl-list  | ε
     def decl_list(self):
@@ -87,7 +87,8 @@ class Parser:
             if self.eat(Tag.SMB_SEM):
                 self.decl_list()
             else:
-                self.skip("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
         else:
             return
 
@@ -105,8 +106,9 @@ class Parser:
         elif self.eat(Tag.KW_CHAR):
             noType.tipo = Tag.TIPO_CARACTERE
         else:
-            self.skip(
+            self.sinalizaErroSintatico(
                 "Esperado \"NUM\" ou \"CHAR\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
         
         return noType
 
@@ -118,13 +120,14 @@ class Parser:
         tempToken = copy.copy(self.token)
 
         if not self.eat(Tag.ID):
-            self.skip("Esperado \"ID\"; encontrado " + "\"" + self.token.getLexema() + "\"")
-        else: 
-            self.lexer.ts.removeToken(tempToken.getLexema())
-            tempToken.setTipo(noId_list.tipo)
-            self.lexer.ts.addToken(tempToken.getLexema(), tempToken)
+            self.sinalizaErroSintatico("Esperado \"ID\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)  
 
-            self.id_list_linha(noId_list)
+        self.lexer.ts.removeToken(tempToken.getLexema())
+        tempToken.setTipo(noId_list.tipo)
+        self.lexer.ts.addToken(tempToken.getLexema(), tempToken)
+
+        self.id_list_linha(noId_list)
 
     # id_list_linha → “,” id-list | ε
     def id_list_linha(self, type):
@@ -144,31 +147,36 @@ class Parser:
             if self.eat(Tag.SMB_SEM):
                 self.stmt_list()
             else:
-                self.skip("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
         elif self.token.getNome() == Tag.KW_IF:
             self.if_stmt()
             if self.eat(Tag.SMB_SEM):
                 self.stmt_list()
             else:
-                self.skip("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
         elif self.token.getNome() == Tag.KW_WHILE:
             self.while_stmt()
             if self.eat(Tag.SMB_SEM):
                 self.stmt_list()
             else:
-                self.skip("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
         elif self.token.getNome() == Tag.KW_READ:
             self.read_stmt()
             if self.eat(Tag.SMB_SEM):
                 self.stmt_list()
             else:
-                self.skip("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
         elif self.token.getNome() == Tag.KW_WRITE:
             self.write_stmt()
             if self.eat(Tag.SMB_SEM):
                 self.stmt_list()
             else:
-                self.skip("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \";\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
         else:
             return
 
@@ -179,8 +187,9 @@ class Parser:
             self.advance()
 
         else:
-            self.skip(
+            self.sinalizaErroSintatico(
                 "Esperado \"ID, IF, WHILE, READ ou WRITE\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
     #  # assign-stmt → “id” “=” simple_expr
     def assign_stmt(self):
@@ -190,53 +199,64 @@ class Parser:
         if self.eat(Tag.ID):
             if (tempToken.getTipo() == Tag.TIPO_VAZIO):
                 self.sinalizaErroSemantico("ID não declarado")
+                sys.exit(0)
             if not self.eat(Tag.OP_ATRIB):
-                self.skip("Esperado \"=\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \"=\", encontrado " + "\"" + self.token.getLexema() + "\"")
             else:
                 noSimple_expr = self.simple_expr()
                 if noSimple_expr.tipo != tempToken.getTipo():
                     self.sinalizaErroSemantico("Atribuição incompatível")
+                    sys.exit(0)
                 return
         else:
-            self.skip("Esperado \"ID\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"ID\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
     # if-stmt → “if” “(“ expression “)” “{“ stmt-list “}” if-stmt_linha
     def if_stmt(self):
         if self.eat(Tag.KW_IF):
             if not self.eat(Tag.SMB_OPA):
-                self.skip("Esperado \"(\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \"(\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
 
             noExpression = self.expression()
 
             if not self.eat(Tag.SMB_CPA):
-                self.skip("Esperado \")\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \")\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
 
             if noExpression.tipo != Tag.TIPO_LOGICO:
                 self.sinalizaErroSemantico("Expressão lógica mal formada")
+                sys.exit(0)
 
             if not self.eat(Tag.SMB_OBC):
-                self.skip("Esperado \"{\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \"{\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
 
             self.stmt_list()
 
             if not self.eat(Tag.SMB_CBC):
-                self.skip("Esperado \"}\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \"}\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
 
             self.if_stmt_linha()
 
         else:
-            self.skip("Esperado \"IF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"IF\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
     # if-stmt’ → “else” “{“ stmt-list “}” | ε
     def if_stmt_linha(self):
         if self.eat(Tag.KW_ELSE):
             if not self.eat(Tag.SMB_OBC):
-                self.skip("Esperado \"{\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \"{\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
 
             self.stmt_list()
 
             if not self.eat(Tag.SMB_CBC):
-                self.skip("Esperado \"}\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \"}\"; encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
 
         else:
             return
@@ -246,12 +266,14 @@ class Parser:
         self.stmt_prefix()
 
         if not self.eat(Tag.SMB_OBC):
-            self.skip("Esperado \"{\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"{\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
         self.stmt_list()
 
         if not self.eat(Tag.SMB_CBC):
-            self.skip("Esperado \"}\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"}\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
 
 #stmt-prefix → “while” “(“ expression “)”
@@ -261,19 +283,23 @@ class Parser:
     def stmt_prefix(self):
         if self.eat(Tag.KW_WHILE):
             if not self.eat(Tag.SMB_OPA):
-                self.skip("Esperado \"(\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \"(\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
 
             noExpression = self.expression()
             
             if not self.eat(Tag.SMB_CPA):
-                self.skip("Esperado \")\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \")\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
 
             else:
                 if noExpression.tipo != Tag.TIPO_LOGICO:
                     self.sinalizaErroSemantico("Expressão lógica mal formada.")
+                    sys.exit(0)
         
         else:
-            self.skip("Esperado \"WHILE\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"WHILE\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
 
     # read-stmt → “read” “id”
@@ -283,14 +309,17 @@ class Parser:
             tempToken = copy.copy(self.token)
 
             if not self.eat(Tag.ID):
-                self.skip("Esperado \"ID\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \"ID\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
 
             else:
                 if tempToken.getTipo() == Tag.TIPO_VAZIO:
                     self.sinalizaErroSemantico("ID não declarado")
+                    sys.exit(0)
 
         else:
-            self.skip("Esperado \"READ\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"READ\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
 
     # write-stmt → “write” simple-expr
@@ -299,10 +328,12 @@ class Parser:
             noSimple_expr = self.simple_expr()
             if noSimple_expr.tipo != Tag.TIPO_CARACTERE and noSimple_expr.tipo != Tag.TIPO_NUMERO:
                 self.sinalizaErroSemantico("Erro de incompatibilidade para impressão de valores.")
+                sys.exit(0)
                 
             return 
         else:
-            self.skip("Esperado \"WRITE\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"WRITE\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
     #    3° Bloco - Regras
 
@@ -456,6 +487,7 @@ class Parser:
             if noFactor.tipo != Tag.TIPO_LOGICO:
                 noFactor_a.tipo = Tag.TIPO_ERRO
                 self.sinalizaErroSemantico("Expressao mal formada.")
+                sys.exit(0)
             noFactor_a.tipo = Tag.TIPO_LOGICO
         else:
             noFactor = self.factor()
@@ -480,11 +512,13 @@ class Parser:
             self.eat(Tag.SMB_OPA)
             noExpression = self.expression()
             if not self.eat(Tag.SMB_CPA):
-                self.skip("Esperado \")\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                self.sinalizaErroSintatico("Esperado \")\", encontrado " + "\"" + self.token.getLexema() + "\"")
+                sys.exit(0)
             noFactor.tipo = noExpression.tipo
         else:
-            self.skip(
+            self.sinalizaErroSintatico(
                 "Esperado \"ID, NUM_CONST, CHAR_CONST ou (\" encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
         return noFactor
 
@@ -499,7 +533,8 @@ class Parser:
             self.eat(Tag.KW_AND)
 
         else:
-            self.skip("Esperado \"OR ou AND\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"OR ou AND\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
     # relop → “==” | “>” | “>=” | “<” | “<=” | “!=”
     def relop(self):
@@ -522,8 +557,9 @@ class Parser:
             self.eat(Tag.OP_NE)
 
         else:
-            self.skip(
+            self.sinalizaErroSintatico(
                 "Esperado \"==, >, >=, <, <= ou !=\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
     # addop → “+” | “-”
     def addop(self):
@@ -532,7 +568,8 @@ class Parser:
         elif self.token.getNome() == Tag.OP_MIN:
             self.eat(Tag.OP_MIN)
         else:
-            self.skip("Esperado \"+ ou -\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"+ ou -\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
     # mulop → “*” | “/”
     def mulop(self):
@@ -541,7 +578,8 @@ class Parser:
         elif self.token.getNome() == Tag.OP_DIV:
             self.eat(Tag.OP_DIV)
         else:
-            self.skip("Esperado \"* ou /\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            self.sinalizaErroSintatico("Esperado \"* ou /\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
 
     # constant → “num_const” | “char_const”
     def constant(self):
@@ -551,5 +589,6 @@ class Parser:
         elif self.eat(Tag.CHAR_CONST):
             noConstant.tipo = Tag.TIPO_CARACTERE
         else:
-            self.skip(
+            self.sinalizaErroSintatico(
                 "Esperado \"NUM_CONST ou CHAR_CONST\", encontrado " + "\"" + self.token.getLexema() + "\"")
+            sys.exit(0)
